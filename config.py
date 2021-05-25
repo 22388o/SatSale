@@ -1,15 +1,17 @@
-# SatSale needs to connect to your bitcoin/lnd node,
-# with the correct RPC port(s) as set in this config.
+import os
 
-# Connecting through local host (see below if connecting to remote node):
-host = "127.0.0.1"
-rpcport = "8332"
+# Bitcoin node connection settings
+# This should point to your bitcoin/lnd node,
+# with the correct RPC port as set in your config.
+# Connecting through local host as  i'm running SatSale on my node
+host = os.getenv("BITCOIND_HOST")
+rpcport = os.getenv("BITCOIND_PORT")
 
 # From ~/.bitcoin/bitcoin.conf
-username = "bitcoinrpc"
-password = "rpcpassword"
+username = os.getenv("BITCOIND_USER")
+password = os.getenv("BITCOIND_PASS")
 
-# Wallet (empty "" if your node has a single wallet, OR wallet name/path as shown in `biitcoin-cli listwallets`)
+# Wallet ("" if single-wallet node, OR wallet name/path as shown in `biitcoin-cli listwallets`)
 wallet = ""
 
 # File in which API key will be stored
@@ -23,34 +25,13 @@ api_key_path = "SatSale_API_key"
 # SSH tunnel to node
 # Make sure this command works `ssh HOST@IP -q -N -L 8332:localhost:8332`
 # Use host = "127.0.0.1" and you will be able to see your node on 8332
-tunnel_host = None  # "HOST@IP"
+tunnel_host = None # "HOST@IP"
 
 # or tor hidden service for RPC (see docs for how to set up), need onion:
 tor_bitcoinrpc_host = None # e.g. "http://if...dwr.onion"
 # and a tor proxy, default 127.0.0.1:9050 (for Tor Browser use "127.0.0.1:9150")
 tor_proxy = None
-
-#### Payment method ####
-pay_method = "bitcoind"
-
-## Lightning 
-# Switch payment_method to lnd if you want to use lightning payments instead. And uncomment lnd_dir.
-#pay_method = "lnd"
-
-# To find (or copy from remote nodes) the macaroon and TLS certs
-#lnd_dir = "~/.lnd/"
-
-# lnd RPC port and lnd macaroon (uncomment)
-#lnd_rpcport = "10009"
-#lnd_macaroon = "invoice.macaroon"
-
-# Or clightning
-#pay_method = "clightning"
-
-# If remote clightning, make sure `ssh -nNT -L lightning-rpc:{clightning_rpc_file} {tunnel_host}`
-# creates a lightning-rpc unix domain socket
-#clightning_rpc_file = "/home/user/.lightning/lightning-rpc"
-#######################
+################################
 
 # Check for payment every xx seconds
 pollrate = 15
@@ -81,7 +62,16 @@ lightning_address_comment = None # Defaults to: "Thank you for your support <3"
 # This is NOT a trustless swap. Exchange is carried out using sideshift.ai, you bear all associated exchange risks.
 liquid_address = None
 
+# Payment method
+pay_method = "bitcoind"
+# Switch payment_method to lnd if you want to use lightning payments instead. And uncomment lnd_dir.
+#pay_method = "lnd"
+# lnd_dir is only needed if you want to copy macaroon and TLS cert locally
+#lnd_dir = "~/.lnd/"
+#lnd_rpcport = "10009"
+#lnd_macaroon = "invoice.macaroon"
+#lnd_cert = "tls.cert"
+
 # DO NOT CHANGE THIS TO TRUE UNLESS YOU WANT ALL PAYMENTS TO AUTOMATICALLY
 # BE CONSIDERED AS PAID.
 free_mode = False
-
