@@ -78,7 +78,7 @@ class lnd:
 
         if (not os.path.isfile("tls.cert")) or (not os.path.isfile(config.lnd_macaroon)):
             try:
-                tls_file = os.path.join(config.lnd_dir, "tls.cert")
+                tls_file = config.lnd_cert
                 macaroon_file = os.path.join(
                     config.lnd_dir, "data/chain/bitcoin/mainnet/{}".format(config.lnd_macaroon)
                 )
