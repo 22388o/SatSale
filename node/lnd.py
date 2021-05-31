@@ -74,45 +74,10 @@ class lnd:
 
     # Copy tls and macaroon certs from remote machine.
     def copy_certs(self):
-        self.certs = {"tls": "tls.cert", "macaroon": config.lnd_macaroon}
-
-        if (not os.path.isfile("tls.cert")) or (not os.path.isfile(config.lnd_macaroon)):
-            try:
-                tls_file = config.lnd_cert
-                macaroon_file = os.path.join(
-                    config.lnd_dir, "data/chain/bitcoin/mainnet/{}".format(config.lnd_macaroon)
-                )
-
-                # SSH copy
-                if config.tunnel_host is not None:
-                    print(
-                        "Could not find tls.cert or {} in SatSale folder. \
-                         Attempting to download from remote lnd directory.".format(config.lnd_macaroon)
-                    )
-
-                    subprocess.run(
-                        ["scp", "{}:{}".format(config.tunnel_host, tls_file), "."]
-                    )
-                    subprocess.run(
-                        [
-                            "scp",
-                            "-r",
-                            "{}:{}".format(config.tunnel_host, macaroon_file),
-                            ".",
-                        ]
-                    )
-
-                else:
-                    self.certs = {
-                        "tls": os.path.expanduser(tls_file),
-                        "macaroon": os.path.expanduser(macaroon_file),
-                    }
-
-            except Exception as e:
-                print(e)
-                print("Failed to copy tls and macaroon files to local machine.")
-        else:
-            print("Found tls.cert and admin.macaroon.")
+        self.certs = {'tls' : os.path.expanduser(config.lnd_cert),
+                      'macaroon' : os.path.expanduser(config.lnd_macaroon)}
+        print(os.listdir(os.path.dirname(os.path.expanduser(config.lnd_cert))))
+        print("Found tls.cert and admin.macaroon.")
         return
 
     # Create lightning invoice
