@@ -33,21 +33,27 @@ class btcd(lnd):
     #     self.create_qr()
     #     return
 
-    def create_qr(self):
+    def create_qr(self, uuid, address, value):
         qr_str = "{}?amount={}&label={}".format(
-            self.address.upper(), self.value, self.label
+            address.upper(), value, uuid
         )
 
         img = qrcode.make(qr_str)
         img.save("static/qr_codes/{}.png".format(uuid))
         return
 
-    def check_payment(self):
-        transactions = json.loads(
+    def check_payment(self, address):
+        transactions_req = json.loads(
             MessageToJson(self.lnd.list_transactions())
-            )['transactions']
+            )
 
-        relevant_txs = [tx for tx in transactions if self.address in tx["dest_addresses"]]
+        if 'transactions' not in transactions_req.keys():
+            return 0, 0
+        else:
+            transactions = transactions_req['transactions']
+
+
+        relevant_txs = [tx for tx in transactions if address in tx["dest_addresses"]]
 
         conf_paid = 0
         unconf_paid = 0
@@ -68,8 +74,8 @@ class btcd(lnd):
                     )['address']
                 # self.address = str(self.address).split('"')[1]
                 print(self.address)
+                return self.address, None
 
-                return
             except Exception as e:
                 print(e)
                 print(
@@ -80,4 +86,5 @@ class btcd(lnd):
             if config.connection_attempts - i == 1:
                 print("Reconnecting...")
                 self.__init__()
-        return None
+
+        return self.address, None
