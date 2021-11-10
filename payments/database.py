@@ -1,8 +1,8 @@
 import sqlite3
 
 
-def create_database(name="database.db"):
-    with sqlite3.connect("database.db") as conn:
+def create_database(name="/data/database.db"):
+    with sqlite3.connect(name) as conn:
         print("Creating new database.db...")
         conn.execute(
             "CREATE TABLE payments (uuid TEXT, fiat_value DECIMAL, btc_value DECIMAL, method TEXT, address TEXT, time DECIMAL, webhook TEXT, rhash TEXT)"
@@ -10,8 +10,8 @@ def create_database(name="database.db"):
     return
 
 
-def write_to_database(invoice, name="database.db"):
-    with sqlite3.connect("database.db") as conn:
+def write_to_database(invoice, name="/data/database.db"):
+    with sqlite3.connect(name) as conn:
         cur = conn.cursor()
         cur.execute(
             "INSERT INTO payments (uuid,fiat_value,btc_value,method,address,time,webhook,rhash) VALUES (?,?,?,?,?,?,?,?)",
@@ -30,7 +30,7 @@ def write_to_database(invoice, name="database.db"):
 
 
 def load_invoice_from_db(uuid):
-    with sqlite3.connect("database.db") as conn:
+    with sqlite3.connect("/data/database.db") as conn:
         conn.row_factory = sqlite3.Row
         cur = conn.cursor()
         rows = cur.execute(
