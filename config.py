@@ -7,10 +7,6 @@ import os
 host = os.getenv("LND_HOST")
 rpcport = os.getenv("LND_GLND_PORT")
 
-# From ~/.bitcoin/bitcoin.conf
-username = os.getenv("BITCOIND_USER")
-password = os.getenv("BITCOIND_PASS")
-
 # Wallet ("" if single-wallet node, OR wallet name/path as shown in `biitcoin-cli listwallets`)
 wallet = ""
 
